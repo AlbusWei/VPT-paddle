@@ -18,7 +18,7 @@ class Block(nn.Layer):
         self.bn1 = nn.BatchNorm2D(out_dim)
         self.conv2 = nn.Conv2D(out_dim,out_dim,3,stride=1,padding=1)
         self.bn2 = nn.BatchNorm2D(out_dim)
-        self.relu = nn.GeLU()
+        self.relu = nn.GELU()
 
         if stride == 2 or in_dim!=out_dim:
             self.downsample = nn.Sequential(*[nn.Conv2D(in_dim,out_dim,1,stride = stride),nn.BatchNorm2D(out_dim)])

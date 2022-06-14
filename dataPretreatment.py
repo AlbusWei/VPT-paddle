@@ -173,6 +173,7 @@ def generate_dataloader(train_txt="work/train_list.txt", test_txt="work/test_lis
                                # 换成图象处理的时候直接转灰度
                                # Resize(size=(240,240)),#调整图片大小为240,240
                                # RandomCrop(size=(224,224)),#从240大小中随机裁剪出224
+                               Resize(size=(224, 224)),
                                Normalize(mean=[127.5, 127.5, 127.5], std=[127.5, 127.5, 127.5], data_format='HWC'),
                                # 归一化
                                Transpose()])  # 对‘HWC’转换成‘CHW’
