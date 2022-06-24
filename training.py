@@ -6,22 +6,23 @@ from paddle.regularizer import L2Decay
 from paddle.nn import CrossEntropyLoss
 from paddle.metric import Accuracy
 
-def resnet_train(train_loader,valid_loader,save_dir = './ck_resnet',callback = None):
+
+def resnet_train(train_loader, valid_loader, save_dir='./ck_resnet', callback=None):
     BATCH_SIZE = 512
     EPOCHS = 300  # 训练次数
     # decay_steps = int(len(trn_dateset) / BATCH_SIZE * EPOCHS)
 
-    model = paddle.Model(ResNet50(num_classes=2))
+    model = ResNet50(num_classes=2)
     beta1 = paddle.to_tensor([0.9], dtype="float32")
     beta2 = paddle.to_tensor([0.99], dtype="float32")
 
-    optimizer = paddle.optimizer.AdamW(learning_rate=0.1,
+    optimizer = paddle.optimizer.AdamW(learning_rate=0.0001,
                                        parameters=model.parameters(),
                                        beta1=beta1,
                                        beta2=beta2,
                                        weight_decay=0.01)
 
-    # model.load('ck_resnet/100.pdparams')
+    model.load('pretrain/ResNet50_pretrained.pdparams')
 
     model.prepare(optimizer, CrossEntropyLoss(), Accuracy())
     # 启动训练
@@ -37,7 +38,8 @@ def resnet_train(train_loader,valid_loader,save_dir = './ck_resnet',callback = N
               callbacks=callback)
     return model
 
-def swinT_train(train_loader,valid_loader,save_dir = './checkpoint',callback = None):
+
+def swinT_train(train_loader, valid_loader, save_dir='./checkpoint', callback=None):
     BATCH_SIZE = 12
     EPOCHS = 10  # 训练次数
     decay_steps = int(train_loader.len / BATCH_SIZE * EPOCHS)
@@ -66,18 +68,16 @@ def swinT_train(train_loader,valid_loader,save_dir = './checkpoint',callback = N
 
 
 def main():
-
     # 文件地址
     train_txt = "work/train_list.txt"
     test_txt = "work/test_list.txt"
     val_txt = "work/val_list.txt"
 
-    train_loader, valid_loader, test_loader = generate_dataloader(BATCH_SIZE = 512)
+    train_loader, valid_loader, test_loader = generate_dataloader(BATCH_SIZE=512)
     preview(train_loader)
 
-    # resnet_train(train_loader,valid_loader)
-    swinT_train(train_loader, valid_loader)
-
+    resnet_train(train_loader, valid_loader)
+    # swinT_train(train_loader, valid_loader)
 
 
 if __name__ == "__main__":
