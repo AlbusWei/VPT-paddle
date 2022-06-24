@@ -12,7 +12,7 @@ def resnet_train(train_loader, valid_loader, save_dir='./ck_resnet', callback=No
     EPOCHS = 300  # 训练次数
     # decay_steps = int(len(trn_dateset) / BATCH_SIZE * EPOCHS)
 
-    model = ResNet50(num_classes=2)
+    model = paddle.Model(ResNet50(num_classes=2))
     beta1 = paddle.to_tensor([0.9], dtype="float32")
     beta2 = paddle.to_tensor([0.99], dtype="float32")
 
