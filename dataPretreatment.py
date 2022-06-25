@@ -97,7 +97,10 @@ def generate_dataset(dataset_path, mode="train"):
             # elif idx % 9 == 0:
             #     testf.write((masked_dir + ' ' + str(value) + '\n'))
             else:
-                # trainf.write((img_dir + ' ' + str(value) + '\n'))
+                # 重采样
+                if value == 1:
+                    trainf.write((masked_dir + ' ' + str(value) + '\n'))
+                    trainf.write((masked_dir + ' ' + str(value) + '\n'))
                 trainf.write((masked_dir + ' ' + str(value) + '\n'))
 
     trainf.close()
@@ -154,17 +157,24 @@ class XChestDateset(Dataset):
     def __getitem__(self, idx):
         img_path = self.data_list[idx][0]
         img = cv2.imread(img_path)
+        # 处理错误数据
+        if img is None:
+            print(img_path)
+            with open("wrong_data.txt", "a") as f:
+                f.write(img_path + "/n")
+            return self.__getitem__(idx - 1)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         if self.transform:
             img = self.transform(img)
-        return img, int(self.data_list[idx][1])
+        return img, np.array(self.data_list[idx][1]).astype('int64')
 
     def __len__(self):
         return self.data_list.shape[0]
 
 
 # 预处理，增广，生成数据集
-def generate_dataloader(train_txt="work/train_list.txt", test_txt="work/test_list.txt", val_txt="work/val_list.txt",BATCH_SIZE = 64):
+def generate_dataloader(train_txt="work/train_list.txt", test_txt="work/test_list.txt", val_txt="work/val_list.txt",
+                        BATCH_SIZE=64):
     train_transform = Compose([RandomRotation(degrees=180),  # 随机旋转0到10度
                                RandomHorizontalFlip(),  # 随机翻转
                                ContrastTransform(0.1),  # 随机调整图片的对比度
@@ -190,13 +200,13 @@ def generate_dataloader(train_txt="work/train_list.txt", test_txt="work/test_lis
     test_loader = DataLoader(test_dateset, shuffle=False, batch_size=BATCH_SIZE)
     print(len(trn_dateset))
     print(len(val_dateset))
-    return train_loader,valid_loader,test_loader
+    return train_loader, valid_loader, test_loader
 
 
-#可视化观察
+# 可视化观察
 def imshow(img):
-    img = np.transpose(img, (1,2,0))
-    img = img*127.5 + 127.5  #反归一化，还原图片
+    img = np.transpose(img, (1, 2, 0))
+    img = img * 127.5 + 127.5  # 反归一化，还原图片
     img = img.astype(np.int32)
     plt.imshow(img)
 
@@ -235,9 +245,10 @@ def main():
     test_txt = "work/test_list.txt"
     val_txt = "work/val_list.txt"
 
-    train_loader, valid_loader, test_loader = generate_dataloader(BATCH_SIZE = 512)
+    train_loader, valid_loader, test_loader = generate_dataloader(BATCH_SIZE=64)
 
     preview(train_loader)
+
 
 if __name__ == "__main__":
     main()
