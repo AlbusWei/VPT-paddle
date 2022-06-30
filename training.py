@@ -6,7 +6,7 @@ from paddle.regularizer import L2Decay
 from paddle.nn import CrossEntropyLoss
 from paddle.metric import Accuracy
 
-def resnet_train(train_loader,valid_loader,save_dir = './ck_resnet',callback = None):
+def resnet_train(train_loader,valid_loader,save_dir = '/home/aistudio/ck_resnet',callback = None):
     BATCH_SIZE = 512
     EPOCHS = 300  # 训练次数
     # decay_steps = int(len(trn_dateset) / BATCH_SIZE * EPOCHS)
@@ -37,7 +37,7 @@ def resnet_train(train_loader,valid_loader,save_dir = './ck_resnet',callback = N
               callbacks=callback)
     return model
 
-def swinT_train(train_loader,valid_loader,save_dir = './checkpoint',callback = None):
+def swinT_train(train_loader,valid_loader,save_dir = '/home/aistudio/checkpoint',callback = None):
     BATCH_SIZE = 12
     EPOCHS = 10  # 训练次数
     decay_steps = int(train_loader.len / BATCH_SIZE * EPOCHS)
@@ -75,8 +75,7 @@ def main():
     train_loader, valid_loader, test_loader = generate_dataloader(BATCH_SIZE = 512)
     preview(train_loader)
 
-    # resnet_train(train_loader,valid_loader)
-    swinT_train(train_loader, valid_loader)
+    resnet_train(train_loader,valid_loader)
 
 
 
