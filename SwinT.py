@@ -629,17 +629,3 @@ def swin_tiny(**kwargs):
                             drop_path_rate=0.2,
                             **kwargs)
     return model
-
-class mySwin(nn.Layer):
-    def __init__(self):
-        super().__init__()
-        self.swin_mini = SwinTransformer(img_size = 224,
-                            embed_dim = 96,
-                            depths = [ 2, 4, 2 ],
-                            num_heads = [ 3, 6, 12],
-                            window_size = 7,
-                            drop_path_rate=0.2)
-
-    def forward(self, x):
-        x = self.swin_mini(x)
-        return x
