@@ -1,16 +1,8 @@
-"""
-Unofficial code for VPT(Visual Prompt Tuning) paper of arxiv 2203.12119
-
-A toy Tuning process that demostrates the code
-
-the code is based on timm
-
-"""
 import paddle
 import paddle.nn as nn
 import paddle.optimizer as optim
 import numpy as np
-from .GetPromptModel import build_promptmodel
+from GetPromptModel import build_promptmodel
 
 
 def setup_seed(seed):  # setting up the random seed
@@ -45,7 +37,7 @@ for param in model.parameters():
 
 for i in range(3):
     print('epoch:', i)
-    optimizer.zero_grad()
+    optimizer.clear_grad()
     outputs = model.predict_batch([data])
     loss = criterion(outputs, labels)
     loss.backward()

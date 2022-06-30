@@ -1,13 +1,8 @@
-"""
-build_promptmodel script  ver： Mar 25th 19:20
-
-"""
 import paddle
-
 from ViTmodel.CSwin import CSWinTransformer_base_224
 from ViTmodel.ViT import ViT_base_patch16_224
 from ViTmodel.SwinT import SwinTransformer_base_patch4_window7_224
-from .structure import *
+from structure import *
 
 model_dict = {
     "ViT": {
